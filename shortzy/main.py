@@ -1,8 +1,8 @@
 import asyncio
-import json
 import re
 import aiohttp
 from urllib.parse import urlparse
+
 
 class Shortzy:
     """
@@ -13,10 +13,25 @@ class Shortzy:
     :param base_site: The site you want to use, defaults to droplink.co
     :type base_site: str (optional)
     """
+
     def __init__(self, api_key:str, base_site:str='droplink.co'):
         self.__api_key = api_key
         self.__base_site = base_site
+        self.__api_par = "api"
+        self.__url_par = "url"
+        self.__jsonpar = "shortenedUrl"
+        self.qlink_par = "https://{base_site}/st?api={api_key}&url={url}"
         self.__base_url = f"https://{self.__base_site}/api"
+        self.mime_type = "application/json"
+
+        if self.__base_site == 'shareus.in':
+            self.__base_url = f"https://api.{self.__base_site}/shortLink"
+            self.__api_par = "token"
+            self.__url_par = "link"
+            self.__jsonpar = "shortlink"
+            self.qlink_par = "https://api.{base_site}/directLink?token={api_key}&link={url}"
+            self.mime_type = "text/html"
+
 
         if not self.__api_key:
             raise Exception("API key not provided")
@@ -31,7 +46,7 @@ class Shortzy:
         :return: A list of dictionaries.
         """
         async with session.get(self.__base_url, params=params, raise_for_status=True, ssl=False) as response:
-            result = await response.json() 
+            result = await response.json(content_type=self.mime_type) 
             return result
 
     async def convert(
@@ -59,18 +74,19 @@ class Shortzy:
         :return: The shortened link is being returned.
         """
 
-        is_droplink_link = await self.is_droplink_link(link)
+        is_short_link = await self.is_short_link(link)
 
-        if not is_droplink_link:
+        if not is_short_link:
 
             if quick_link:
                 return await self.get_quick_link(url=link)
 
             else:  
                 params = {
-                    'api': self.__api_key,
-                    'url': link,
-                    'alias': alias
+                    self.__api_par: self.__api_key,
+                    self.__url_par : link,
+                    'alias': alias,
+                    'format':'json'
                         }
                 try:
                     my_conn = aiohttp.TCPConnector(limit=10)
@@ -79,7 +95,7 @@ class Shortzy:
                         data = await self.__fetch(session, params)
 
                         if data["status"] == "success":
-                            return data['shortenedUrl']
+                            return data[self.__jsonpar]
                         else:
                             print(data['message'])
                             return await self.__error_handler(url=link, silently_fail=silently_fail, exception=Exception)
@@ -98,7 +114,7 @@ class Shortzy:
         :alias: The alias to use for the link
         :return: The converted links.
         """
-        link = f"https://{self.__base_site}/st?api={self.__api_key}&url={url}"
+        link = self.qlink_par.format(self.__base_site, self.__api_key, url)
         return link
 
 
@@ -142,8 +158,8 @@ class Shortzy:
             text = text.replace(links[i], droplink_link)
         return text
 
-    @staticmethod
-    async def is_droplink_link(link:str) -> bool:
+
+    async def is_short_link(self, link:str) -> bool:
         """
         It checks if the link is a valid mdisk link.
         
@@ -152,7 +168,7 @@ class Shortzy:
         :return: True if the link is a valid mdisk link, False otherwise
         """
         domain = urlparse(link).netloc
-        if 'droplink.me' in domain:
+        if self.__base_site in domain:
             return True
         return False
 
@@ -178,4 +194,8 @@ class Shortzy:
         regex = r"""(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b/?(?!@)))"""
         urls = re.findall(regex, string)
         return ["".join(x) for x in urls]
-    
+
+    @staticmethod
+    def available_websites():
+        available_websites = ["droplink.co", "gplinks.in" ,"tnlink.in", "za.gl" ,"du-link.in", "viplink.in", "shorturllink.in", "shareus.in", "All droplink.co Alternative Websites"]
+        return "\n".join(available_websites)

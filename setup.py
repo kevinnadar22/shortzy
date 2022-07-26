@@ -5,15 +5,15 @@ import os
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-with codecs.open(os.path.join(here, "package.md"), encoding="utf-8") as fh:
+with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.0.0'
-DESCRIPTION = 'An Unofficial Asynchronous Python version of Mdisk API wrapper'
+VERSION = '0.0.3'
+DESCRIPTION = 'An Unofficial Asynchronous Python version of Adlinkfly and Alternative Website API wrapper'
 
 # Setting up
 setup(
-    name="mdisky",
+    name="shortzy",
     version=VERSION,
     author="Kevin Nadar",
     license="MIT",
@@ -24,7 +24,7 @@ setup(
     packages=find_packages(),
     install_requires=['aiohttp',],
     url="https://github.com/kevinnadar22/shortzy",
-    keywords=['python', 'droplink', 'gplink', 'url-shortener', 'earn money '],
+    keywords=['python', 'droplink', 'gplink', 'url-shortener', 'earn money', 'shareus'],
     classifiers=[
         "Development Status :: 1 - Planning",
         "Intended Audience :: Developers",
