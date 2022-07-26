@@ -68,7 +68,7 @@ Output: https://droplink.co/mVkra
 <details>
   <summary>Available list of Websites</summary>
   <ol>
-    <li><a href="https://droplink.co" target="_blank">https://droplink.co</a></li>
+    <li><a href="https://droplink.co" target="_blank">droplink.co</a></li>
     <li><a href="https://gplinks.in" target="_blank">gplinks.in</a></li>
     <li><a href="https://tnlink.in" target="_blank">tnlink.in</a></li>
     <li><a href="https://za.gl" target="_blank">za.gl</a></li>
