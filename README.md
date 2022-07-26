@@ -68,13 +68,13 @@ Output: https://droplink.co/mVkra
 <details>
   <summary>Available list of Websites</summary>
   <ol>
-    <li><a href="droplink.co">droplink.co</a></li>
-    <li><a href="gplinks.in">gplinks.in</a></li>
-    <li><a href="tnlink.in">tnlink.in</a></li>
-    <li><a href="za.gl">za.gl</a></li>
-    <li><a href="du-link.in">du-link.in</a></li>
-    <li><a href="viplink.in">viplink.in</a></li>
-    <li><a href="shorturllink.in">shorturllink.in</a></li>
+    <li><a href="https://droplink.co">droplink.co</a></li>
+    <li><a href="https://gplinks.in">gplinks.in</a></li>
+    <li><a href="https://tnlink.in">tnlink.in</a></li>
+    <li><a href="https://za.gl">za.gl</a></li>
+    <li><a href="https://du-link.in">du-link.in</a></li>
+    <li><a href="https://viplink.in">viplink.in</a></li>
+    <li><a href="https://shorturllink.in">shorturllink.in</a></li>
     <li><a href="https://telegram.me/ask_admin001">Request For Your Website !</a></li>
   </ol>
 </details>
