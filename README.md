@@ -94,7 +94,7 @@ convert(link, alias, silently_fail, quick_link) -> str
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `link` | `string` | **Required**. Others Mdisk Link |
+| `link` | `string` | **Required**. Long URL Link |
 | `alias` | `string` | Custom alias for the link |
 | `silently_fail` | `bool` | Raise an exception or not if error ocuurs |
 | `quick_link` | `bool` | Returns the quick link |
