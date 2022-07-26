@@ -99,6 +99,7 @@ import asyncio
 shortzy = Shortzy(api_key="Your API Key", base_site="droplink.co") 
 
 # Base site defaults to "droplink.co". You can add your own site here which is alternative to this default site
+# Please Refer https://github.com/kevinnadar22/shortzy#available-websites for more information
 ```
 
 ### Convert a single URL
