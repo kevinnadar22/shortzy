@@ -114,7 +114,7 @@ class Shortzy:
         :alias: The alias to use for the link
         :return: The converted links.
         """
-        link = self.qlink_par.format(self.__base_site, self.__api_key, url)
+        link = self.qlink_par.format(base_site=self.__base_site, api_key=self.__api_key, url=url)
         return link
 
 
