@@ -20,9 +20,9 @@ class Shortzy:
             raise Exception("API key not provided")
 
         if self.base_site == "shareus.in":
-            self.shortener = Shareus(api_key)
+            self.shortener = Shareus(api_key, base_site=base_site)
         else:
-            self.shortener = Adlinkfly(api_key)
+            self.shortener = Adlinkfly(api_key, base_site=base_site)
 
     async def convert(
         self, link: str, silently_fail: bool = False, quick_link: bool = False, alias: str = "", ** kwargs
