@@ -4,11 +4,11 @@ from urllib.parse import urlparse
 import aiohttp
 
 
-class Shareus:
-    def __init__(self, api_key: str, base_site: str = "shareus.in"):
+class ShareusIO:
+    def __init__(self, api_key: str, base_site: str = "shareus.io"):
         self.api_key = api_key
         self.base_site = base_site
-        self.base_url = f"https://api.{self.base_site}/shortLink"
+        self.base_url = f"https://api.{self.base_site}/easy_api"
 
         if not self.api_key:
             raise Exception("API key not provided")
@@ -17,7 +17,7 @@ class Shareus:
         async with session.get(
             self.base_url, params=params, raise_for_status=True, ssl=False
         ) as response:
-            return await response.json(content_type="text/html")
+            return await response.text()
 
     async def convert(
         self, link: str, silently_fail: bool = False, quick_link: bool = False, **kwargs
@@ -30,30 +30,28 @@ class Shareus:
         if quick_link:
             return await self.get_quick_link(url=link)
 
-        params = {
-            "token": self.api_key,
-            "link": link,
-            "format": "json",
-        }
+        params = {"key": self.api_key, "link": link}
         try:
             my_conn = aiohttp.TCPConnector(limit=10)
             async with aiohttp.ClientSession(connector=my_conn) as session:
                 session = session
                 data = await self.__fetch(session, params)
 
-                if data["status"] == "success":
-                    return data["shortlink"]
+                if data != "settings not saved":
+                    return data
 
                 if silently_fail:
                     return link
 
-                raise Exception(data["message"])
+                raise Exception("Settings not saved or invalid API key.")
 
         except Exception as e:
             raise Exception(e) from e
 
     async def get_quick_link(self, url: str, **kwargs) -> str:
-        quick_link = "https://api.{base_site}/directLink?token={api_key}&link={url}"
+        quick_link = (
+            "https://api.{base_site}/direct_link?api_key={api_key}&link={url}&pages=3"
+        )
         return quick_link.format(
             base_site=self.base_site,
             api_key=self.api_key,

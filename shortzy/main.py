@@ -1,5 +1,6 @@
 from .shareus import Shareus
 from .adlinkfly import Adlinkfly
+from .shareusio import ShareusIO
 
 
 class Shortzy:
@@ -21,11 +22,18 @@ class Shortzy:
 
         if self.base_site == "shareus.in":
             self.shortener = Shareus(api_key, base_site=base_site)
+        elif self.base_site == "shareus.io":
+            self.shortener = ShareusIO(api_key, base_site=base_site)
         else:
             self.shortener = Adlinkfly(api_key, base_site=base_site)
 
     async def convert(
-        self, link: str, silently_fail: bool = False, quick_link: bool = False, alias: str = "", ** kwargs
+        self,
+        link: str,
+        silently_fail: bool = False,
+        quick_link: bool = False,
+        alias: str = "",
+        **kwargs
     ) -> str:
         """
         It converts a link to a short link.
@@ -93,7 +101,13 @@ class Shortzy:
             text, silently_fail, quick_link, **kwargs
         )
 
-    async def bulk_convert(self, links: list, silently_fail: bool = False, quick_link: bool = False, **kwargs) -> list:
+    async def bulk_convert(
+        self,
+        links: list,
+        silently_fail: bool = False,
+        quick_link: bool = False,
+        **kwargs
+    ) -> list:
         """
         It converts a list of links to a list of short links.
 
@@ -109,7 +123,9 @@ class Shortzy:
 
         :return: The list of shortened links is being returned.
         """
-        return await self.shortener.bulk_convert(links, silently_fail=silently_fail, quick_link=quick_link, **kwargs)
+        return await self.shortener.bulk_convert(
+            links, silently_fail=silently_fail, quick_link=quick_link, **kwargs
+        )
 
     async def is_short_link(self, link: str) -> bool:
         """
