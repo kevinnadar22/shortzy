@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/kevinnadar22/shortzy">
-    <img src="https://e7.pngegg.com/pngimages/789/777/png-clipart-computer-icons-tinyurl-hyperlink-symbol-url-shortening-chain-miscellaneous-text-thumbnail.png" alt="Logo" width="80" height="80">
+    <img src="https://play-lh.googleusercontent.com/v_bqvNUR5tNZlIkXe3oe8e5WDFjj4ApHKN-6H3U-rcvi0X0qjQlOefzb05RPxTNBU8A" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Shortzy</h3>
